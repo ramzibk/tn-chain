@@ -20,14 +20,14 @@ class Block{
     return new this(Date.now(),"---------",SHA256("GenesisBlock"+Date.now()).toString(),["Genesis data"]);
   }
 
-  mineBlock(lastBlock, data){
+  static mineBlock(lastBlock, data){
      const timestamp = Date.now();
      const lastHash = lastBlock.hash;
-     const hash = hash(timestamp, lastHash, data);
+     const hash = Block.hash(timestamp, lastHash, data);
      return new Block(timestamp, lastHash, hash, data);
   }
 
-  static hash(timestamp, lastHash, hash, data){
+  static hash(timestamp, lastHash, data){
     return SHA256('${timestamp}${lastHash}${data}').toString();
   }
 }
