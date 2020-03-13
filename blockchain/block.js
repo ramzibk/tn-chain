@@ -22,7 +22,7 @@ class Block{
   }
 
   static genesis(){
-    return new this(Date.now(),"---------",ChainUtil.hash("GenesisBlock"+Date.now()).toString(),["Genesis data"],0,DIFFICULTY);
+    return new this(Date.now(),"---------",ChainUtil.hash("GenesisBlock"+Date.now()).toString(),[],0,DIFFICULTY);
   }
 
   static mineBlock(lastBlock, data){

@@ -21,6 +21,7 @@ class Wallet{
     }
 
     createTransaction(recipient, amount, transactionPool, blockchain){
+        console.log(`blockchain.chain: ${blockchain.chain}`);
         this.balance = this.calculateBalance(blockchain);
         
         if(amount > this.balance){
@@ -48,20 +49,21 @@ class Wallet{
         }));
 
         // select transactions  sent to his wallet
-        console.log(transactions);
         const walletInputTs = transactions.filter(transaction => transaction.input.address === this.publicKey);
         
-        // select last transaction output balance and input timestamp sent to this wallet
         let startTime = 0;
-        if(walletInputTs.length > 0){
+        if(walletInputTs.length > 0){  // reduce function returns undefined for empty arrays
+            // select the most recent input transaction sent from this wallet
             const recentInputT = walletInputTs.reduce(
                 (prev, curr) => prev.input.timestamp > curr.input.timestamp ? prev : curr
             );
+            
+            // get the most recent output amount sent to this wallet
             balance = recentInputT.outputs.find(output => output.address === this.publicKey).amount;
             startTime = recentInputT.input.timestamp;
         }
 
-        // accumulate outputs amount to wallet balance
+        // add all transaction output amounts sent to this wallet after the the most recent input
         transactions.forEach(transaction => {
             if( transaction.input.timestamp > startTime) {
                 transaction.outputs.find(output => {
